@@ -2,10 +2,13 @@ import imaplib
 import getpass
 import email
 from email.header import decode_header
+import os
+from dotenv import load_dotenv
 
-# IMAP server details
-IMAP_SERVER = "mail.mondoparts.ro"
-IMAP_PORT = 993
+# Load environment variables from .env file
+load_dotenv()
+IMAP_SERVER = os.getenv("IMAP_SERVER")
+IMAP_PORT = int(os.getenv("IMAP_PORT", 993))
 
 def authenticate():
   print("Login to your email account at mail.mondoparts.ro")
