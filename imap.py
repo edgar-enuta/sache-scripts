@@ -71,26 +71,39 @@ def parse_email_from_bytes(raw_bytes):
       break
   return {"from": from_, "subject": subject, "body": body, "date": date}
 
+def print_email(email_obj):
+  """
+  Print the details of an email object (dict with keys: from, subject, body, date).
+  """
+  print(f"From: {email_obj['from']}")
+  print(f"Subject: {email_obj['subject']}")
+  print(f"Date: {email_obj['date']}")
+  print(f"Body: {email_obj['body'][:200]}")  # Print first 200 chars of body
+  print("-" * 40)
+
 def get_unread_emails(limit=None):
   """
-  Retrieve and print unread emails from the inbox.
+  Retrieve unread and unflagged emails from the inbox.
   If limit is given, only fetch up to that many emails.
+  Returns a list of email objects.
   """
   global mail
   if mail is None:
     print("Not authenticated. Please login first.")
     authenticate()
-    return
+    return []
 
+  emails = []
   try:
     mail.select("inbox")
-    status, messages = mail.search(None, "UNSEEN")
+    # Only fetch emails that are UNSEEN and UNFLAGGED
+    status, messages = mail.search(None, "UNSEEN", "UNFLAGGED")
     if status != "OK":
       print("Failed to search for unread emails.")
-      return
+      return []
 
     email_ids = messages[0].split()
-    print(f"Unread emails: {len(email_ids)}\n")
+    print(f"Unread and unflagged emails: {len(email_ids)}\n")
 
     if limit is not None:
       email_ids = email_ids[:limit]
@@ -100,14 +113,15 @@ def get_unread_emails(limit=None):
       if not raw_bytes:
         continue
       email_obj = parse_email_from_bytes(raw_bytes)
-      print(f"From: {email_obj['from']}")
-      print(f"Subject: {email_obj['subject']}")
-      print(f"Body: {email_obj['body'][:200]}")  # Print first 200 chars of body
-      print("-" * 40)
+      emails.append(email_obj)
+      # To print, use: print_email_obj(email_obj)
+    return emails
   except imaplib.IMAP4.error as e:
     print(f"IMAP error: {e}")
+    return []
   except Exception as e:
     print(f"An error occurred: {e}")
+    return []
 
 def logout():
   print("Logging out...")

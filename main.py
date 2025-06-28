@@ -1,8 +1,10 @@
-import imap_mail as imap_mail
+import imap
 
 
 if __name__ == "__main__":
-  imap_mail.init()
-  imap_mail.authenticate()
-  imap_mail.get_unread_emails(5)
-  imap_mail.logout()
+  imap.init()
+  imap.authenticate()
+  emails = imap.get_unread_emails(limit=5)
+  for email in emails:
+    imap.print_email(email)
+  imap.logout()

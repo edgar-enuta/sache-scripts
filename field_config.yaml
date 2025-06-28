@@ -1,0 +1,11 @@
+email_title:
+  pattern: 'FW: Comanda Auto Total 1037-\d{14}'
+order_id:
+  pattern: 'Order ID:\s*(\w+)'
+  excel_column: 'Order Number'
+total:
+  pattern: 'Total:\s*\$?([\d\.]+)'
+  excel_column: 'Order Total'
+cost:
+  pattern: 'Cost:\s*\$?([\d\.]+)'
+  excel_column: 'Order Cost'
