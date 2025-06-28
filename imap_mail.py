@@ -54,6 +54,7 @@ def parse_email_from_bytes(raw_bytes):
   if isinstance(subject, bytes):
     subject = subject.decode(encoding or "utf-8", errors="ignore")
   from_ = msg.get("From")
+  date = msg.get("Date")
   # Extract body (prefer plain text)
   body = ""
   parts = msg.walk() if msg.is_multipart() else [msg]
@@ -68,7 +69,7 @@ def parse_email_from_bytes(raw_bytes):
       except Exception:
         body = payload.decode("utf-8", errors="ignore")
       break
-  return {"from": from_, "subject": subject, "body": body}
+  return {"from": from_, "subject": subject, "body": body, "date": date}
 
 def get_unread_emails(limit=None):
   """
