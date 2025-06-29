@@ -1,11 +1,12 @@
 email_title:
-  pattern: 'FW: Comanda Auto Total 1037-\d{14}'
+  pattern: 'Fw: Comanda Auto Total 1037-(\d{14})'
+  excel_column: 'NrComClient'
 order_id:
-  pattern: 'Order ID:\s*(\w+)'
-  excel_column: 'Order Number'
+  pattern: 'Cod = (\d{8})'
+  excel_column: 'CodInitialComClient'
 total:
-  pattern: 'Total:\s*\$?([\d\.]+)'
-  excel_column: 'Order Total'
+  pattern: 'Cantitate = (\d+)'
+  excel_column: 'CantInitialaComClient'
 cost:
-  pattern: 'Cost:\s*\$?([\d\.]+)'
-  excel_column: 'Order Cost'
+  pattern: 'Pret (ron, fara tva) = (\d|.+)'
+  excel_column: 'PretPropusClient'
