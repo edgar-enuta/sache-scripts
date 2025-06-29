@@ -4,6 +4,8 @@ import email
 from email.header import decode_header
 import os
 from dotenv import load_dotenv
+import yaml
+import re
 
 IMAP_SERVER = None
 IMAP_PORT = None
@@ -35,9 +37,10 @@ def fetch_email_by_id(email_id):
   """
   Fetch the raw email data for a given email ID.
   Returns the raw bytes of the email, or None if fetch fails.
+  Does not mark the email as read.
   """
   global mail
-  status, msg_data = mail.fetch(email_id, "(RFC822)")
+  status, msg_data = mail.fetch(email_id, "(BODY.PEEK[])")
   if status != "OK" or not msg_data or not msg_data[0]:
     print(f"Failed to fetch email {email_id.decode()}")
     return None
@@ -71,6 +74,17 @@ def parse_email_from_bytes(raw_bytes):
       break
   return {"from": from_, "subject": subject, "body": body, "date": date}
 
+def parse_title_from_bytes(raw_bytes):
+    """
+    Extract and decode the subject/title from raw email bytes.
+    Returns the decoded subject as a string.
+    """
+    msg = email.message_from_bytes(raw_bytes)
+    subject, encoding = decode_header(msg["Subject"])[0]
+    if isinstance(subject, bytes):
+        subject = subject.decode(encoding or "utf-8", errors="ignore")
+    return subject
+
 def print_email(email_obj):
   """
   Print the details of an email object (dict with keys: from, subject, body, date).
@@ -80,6 +94,17 @@ def print_email(email_obj):
   print(f"Date: {email_obj['date']}")
   print(f"Body: {email_obj['body'][:200]}")  # Print first 200 chars of body
   print("-" * 40)
+
+def filter_by_title(title, config_path="field_config.yaml"):
+    """
+    Returns True if the title matches the email_title pattern in field_config.yaml, else False.
+    """
+    with open(config_path, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+    pattern = config.get("email_title", {}).get("pattern")
+    if not pattern:
+        return False
+    return re.search(pattern, title) is not None
 
 def get_unread_emails(limit=None):
   """
@@ -112,9 +137,11 @@ def get_unread_emails(limit=None):
       raw_bytes = fetch_email_by_id(num)
       if not raw_bytes:
         continue
-      email_obj = parse_email_from_bytes(raw_bytes)
-      emails.append(email_obj)
-      # To print, use: print_email_obj(email_obj)
+      title = parse_title_from_bytes(raw_bytes)
+      print(f"Processing email: {title}")
+      if filter_by_title(title):  
+        email_obj = parse_email_from_bytes(raw_bytes)
+        emails.append(email_obj)
     return emails
   except imaplib.IMAP4.error as e:
     print(f"IMAP error: {e}")
