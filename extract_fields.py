@@ -21,5 +21,6 @@ def extract_fields_from_emails(emails, config_path="field_config.yaml"):
         match = re.search(pattern, text)
         if match:
           row[excel_column] = match.group(1) if match.groups() else match.group(0)
+    print(f"Extracted fields: {row}")
     results.append(row)
   return results

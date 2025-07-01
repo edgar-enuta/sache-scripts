@@ -8,5 +8,5 @@ total:
   pattern: 'Cantitate = (\d+)'
   excel_column: 'CantInitialaComClient'
 cost:
-  pattern: 'Pret (ron, fara tva) = (\d|.+)'
+  pattern: 'Pret (ron, fara tva) = ((?:\d|.)+)'
   excel_column: 'PretPropusClient'

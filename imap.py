@@ -138,8 +138,9 @@ def get_unread_emails(limit=None):
       if not raw_bytes:
         continue
       title = parse_title_from_bytes(raw_bytes)
-      print(f"Processing email: {title}")
-      if filter_by_title(title):  
+      print(f"Filtering email: {title}")
+      if filter_by_title(title):
+        print(f"Email matches filter")
         email_obj = parse_email_from_bytes(raw_bytes)
         emails.append(email_obj)
     return emails
