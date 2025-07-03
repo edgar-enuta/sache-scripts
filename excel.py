@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from openpyxl import Workbook, load_workbook
+import shutil
 
 load_dotenv()
 
@@ -39,3 +40,15 @@ def export_to_excel(data, excel_path=EXCEL_PATH):
         ws.append([row.get(col, "") for col in columns])
 
     wb.save(excel_path)
+
+def backup_excel(path):
+    if path and os.path.exists(path):
+        backup_path = path + ".bak"
+        shutil.copy2(path, backup_path)
+        return backup_path
+    return None
+
+def restore_excel(backup_path, path):
+    if backup_path and os.path.exists(backup_path):
+        shutil.copy2(backup_path, path)
+        os.remove(backup_path)
