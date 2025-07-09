@@ -142,6 +142,8 @@ def get_unread_emails(limit=None):
       if filter_by_title(title):
         print(f"Email matches filter")
         email_obj = parse_email_from_bytes(raw_bytes)
+        # Add the email id (UID) to the email object for later flagging
+        email_obj['uid'] = num
         emails.append(email_obj)
     return emails
   except imaplib.IMAP4.error as e:

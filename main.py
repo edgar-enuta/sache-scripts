@@ -8,11 +8,32 @@ load_dotenv()
 EXCEL_PATH = os.getenv("EXCEL_PATH")
 
 def flag_emails_as_processed(emails):
-    # Example: mark as flagged (\Flagged) or as seen (\Seen)
+    # Mark each email as flagged (\Flagged) using imap
     for email in emails:
-        # You need to store the email UID or ID in the email dict for this to work
-        # This is a placeholder; actual implementation depends on your imap.py
-        pass
+        uid = email.get('uid')
+        if uid:
+            try:
+                imap.mail.store(uid, '+FLAGS', '\\Flagged')
+            except Exception as e:
+                print(f"Failed to flag email {uid}: {e}")
+        else:
+            subj = email.get('subject', '[No Subject]')
+            sender = email.get('from', '[No From]')
+            print(f"No email id found for flagging. Subject: {subj}, From: {sender}")
+
+def unflag_emails(emails):
+    # Remove the \Flagged flag from each email using imap
+    for email in emails:
+        uid = email.get('uid')
+        if uid:
+            try:
+                imap.mail.store(uid, '-FLAGS', '\\Flagged')
+            except Exception as e:
+                print(f"Failed to unflag email {uid}: {e}")
+        else:
+            subj = email.get('subject', '[No Subject]')
+            sender = email.get('from', '[No From]')
+            print(f"No email id found for unflagging. Subject: {subj}, From: {sender}")
 
 
 if __name__ == "__main__":
@@ -30,5 +51,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error occurred: {e}. Rolling back changes.")
         excel.restore_excel(backup_path, EXCEL_PATH)
+        unflag_emails(emails)
     finally:
         imap.logout()
