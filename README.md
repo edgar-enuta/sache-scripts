@@ -109,3 +109,18 @@ If you want the script to process different types of emails, you can change the 
     ```
 
 If you are unsure how to write your pattern, ask for help or use [regexr.com](https://regexr.com/) to experiment until it matches the emails you want.
+
+## Future Changes
+
+The following improvements are planned or recommended for future versions of this tool:
+
+- **Improved Logging:**
+  - Add more detailed and user-friendly logs for all actions, errors, and skipped emails, including timestamps and log levels (info, warning, error).
+- **Email Attachments Support:**
+  - Optionally extract and save attachments from emails.
+- **Automatic Scheduling:**
+  - Add the ability to run the script automatically at set intervals (e.g., every hour).
+- **Better Error Handling:**
+  - More robust rollback and notification if something goes wrong.
+
+If you have suggestions or need a specific feature, please contact the maintainer.
