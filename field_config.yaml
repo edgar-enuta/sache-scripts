@@ -1,5 +1,5 @@
 email_title:
-  pattern: 'Fw: Comanda Auto Total 1037-(\d{14})'
+  pattern: 'Fw|W: Comanda Auto Total 1037-(\d{14})'
   excel_column: 'NrComClient'
 order_id:
   pattern: 'Cod = ((?:\d|\w){8})'
