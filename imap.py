@@ -28,10 +28,13 @@ def authenticate():
     mail = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT)
     mail.login(user, password)
     print("Login successful!\n")
+    return True
   except imaplib.IMAP4.error as e:
-      print(f"IMAP error: {e}")
+    print(f"IMAP error: {e}")
+    return False
   except Exception as e:
-      print(f"An error occurred: {e}")
+    print(f"An error occurred: {e}")
+    return False
 
 def fetch_email_by_id(email_id):
   """

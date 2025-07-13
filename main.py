@@ -38,7 +38,9 @@ def unflag_emails(emails):
 
 if __name__ == "__main__":
     imap.init()
-    imap.authenticate()
+    if not imap.authenticate():
+        print("Login failed. Halting program.")
+        exit(1)
     emails = []
     extracted = []
     backup_path = None
