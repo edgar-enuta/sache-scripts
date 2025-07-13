@@ -25,6 +25,13 @@ This tool automatically reads specific emails, extracts important information, a
 ## Environment Configuration
 1. **Create a `.env` File**
    - In your project folder, create a file named `.env` (if it does not already exist).
+   - **On Windows:**
+     - Open the Command Prompt and navigate to your project folder.
+     - Run the following command:
+       ```
+       type NUL > .env
+       ```
+     - Or, right-click in the folder in File Explorer, choose **New > Text Document**, and rename it to `.env` (make sure there is no `.txt` at the end).
 
 2. **Add the Following Settings to `.env`:**
    - Replace the values with your actual information.
