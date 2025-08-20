@@ -46,7 +46,7 @@ This tool automatically reads specific emails, extracts important information, a
    - `EMAIL_PASSWORD`: Your email password (or app password if using Gmail/Outlook).
    - `IMAP_SERVER`: The IMAP server address for your email provider.
    - `IMAP_PORT`: Usually 993 for secure connections.
-   - `EXCEL_PATH`: The path where the Excel file will be saved (e.g., `output/data.xlsx`).
+   - `EXCEL_PATH`: The template path for Excel files. The script will create timestamped files based on this path (e.g., if set to `output/data.xlsx`, files will be created as `output/2025-08-20_19-38-32_data.xlsx`).
 
 ## Usage
 1. **Start the Script**
@@ -59,31 +59,40 @@ This tool automatically reads specific emails, extracts important information, a
      - Connect to your email account.
      - Read unread emails that match the configured pattern.
      - Extract the required fields.
-     - Save the data to the Excel file.
+     - Create a new Excel file with a unique timestamp for each run.
      - Mark the emails as processed.
 
 2. **Check the Output**
-   - Open the Excel file specified in your `.env` file to see the extracted data.
+   - Each run creates a new Excel file with a timestamp in the filename.
+   - Files are saved in the directory specified by `EXCEL_PATH` in your `.env` file.
+   - Example filename: `2025-08-20_19-38-32_data.xlsx`
 
 ## How It Works
 - The script connects to your email account using IMAP and searches for unread and unflagged emails.
 - It only processes emails whose subject matches the pattern defined in `field_config.yaml` under `email_title.pattern`.
 - For each matching email, it extracts fields based on the patterns and column names defined in `field_config.yaml`.
-- The extracted data is appended to the Excel file specified by `EXCEL_PATH`.
-- After successful export, the script flags the processed emails so they are not processed again.
-- If any error occurs during the process, the script restores the Excel file to its previous state and removes the flag from any emails that were flagged during the failed run.
+- **New Excel File Per Run**: Instead of appending to an existing file, each run creates a new Excel file with a timestamp (format: `YYYY-MM-DD_HH-MM-SS_filename.xlsx`).
+- After successful Excel file creation, the script flags the processed emails so they are not processed again.
+- If any error occurs during the process, the script removes any partially created Excel file and removes the flag from any emails that were flagged during the failed run.
 
 ## Configuration Details
 - **field_config.yaml**: This file controls which fields are extracted from emails. Each field has a `pattern` (regular expression) and an `excel_column` (the column name in Excel).
-- **main.py**: This is the entry point. It handles the transaction logic, so no partial data is left if something fails.
+- **main.py**: This is the entry point. It handles the transaction logic with improved error handling and cleanup.
 - **imap.py**: Handles connecting to your email, searching, and fetching emails. It uses the IMAP protocol and does not mark emails as read when fetching.
 - **extract_fields.py**: Extracts data from emails using the patterns in `field_config.yaml`.
-- **excel.py**: Handles writing to the Excel file and backing up/restoring it for safe transactions.
+- **excel.py**: Creates timestamped Excel files and handles data export. Each run generates a unique file to prevent data loss and provide a clear audit trail.
 
 ## Safety and Data Integrity
-- The script is transactional: if any step fails, all changes to the Excel file and email flags are rolled back.
-- Emails are only flagged as processed after a successful export to Excel.
-- The Excel file is backed up before writing and restored if an error occurs.
+- The script is transactional: if any step fails, all changes to email flags are rolled back and any incomplete Excel files are removed.
+- Emails are only flagged as processed after a successful Excel file creation.
+- Each run creates a new timestamped Excel file, preventing accidental data loss from overwrites.
+- The timestamp format (`YYYY-MM-DD_HH-MM-SS`) ensures chronological sorting and easy identification of when data was processed.
+
+## File Management
+- **Unique Files**: Each script run creates a new Excel file with a timestamp, so historical data is preserved.
+- **No Overwrites**: Previous Excel files are never modified or overwritten.
+- **Easy Tracking**: The timestamp in the filename makes it easy to track when each batch of emails was processed.
+- **Clean Failures**: If processing fails, any partially created files are automatically cleaned up.
 
 ## Troubleshooting
 - If you see errors about missing packages, make sure you have run `pip install -r requirements.txt`.
@@ -117,6 +126,18 @@ If you want the script to process different types of emails, you can change the 
 
 If you are unsure how to write your pattern, ask for help or use [regexr.com](https://regexr.com/) to experiment until it matches the emails you want.
 
+## Recent Improvements
+
+The following features have been recently implemented:
+
+- **✅ Timestamped Excel Files:**
+  - Each run now creates a new Excel file with a unique timestamp in the filename.
+  - Format: `YYYY-MM-DD_HH-MM-SS_original_filename.xlsx`
+  - Prevents data loss from overwrites and provides clear audit trail.
+- **✅ Enhanced Error Handling:**
+  - Improved transaction safety with automatic cleanup of failed operations.
+  - Better user feedback with clearer success/failure messages.
+
 ## Future Changes
 
 The following improvements are planned or recommended for future versions of this tool:
@@ -127,7 +148,9 @@ The following improvements are planned or recommended for future versions of thi
   - Optionally extract and save attachments from emails.
 - **Automatic Scheduling:**
   - Add the ability to run the script automatically at set intervals (e.g., every hour).
-- **Better Error Handling:**
-  - More robust rollback and notification if something goes wrong.
+- **Data Consolidation Options:**
+  - Optional feature to merge data from multiple timestamped files into a master spreadsheet.
+- **Configuration Validation:**
+  - Validate email patterns and Excel column configurations on startup.
 
 If you have suggestions or need a specific feature, please contact the maintainer.
