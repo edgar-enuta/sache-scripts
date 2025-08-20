@@ -2,10 +2,37 @@ import os
 from dotenv import load_dotenv
 from openpyxl import Workbook
 from datetime import datetime
+import yaml
 
 load_dotenv()
 
 EXCEL_PATH = os.getenv("EXCEL_PATH")
+
+def get_column_order(config_path="field_config.yaml"):
+    """
+    Get the preferred column order from the config file.
+    System columns (order_number, email_date) come first, followed by pattern fields.
+    """
+    with open(config_path, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+    
+    # Define system columns that should appear first
+    system_fields = ['order_number', 'email_date']
+    ordered_columns = []
+    
+    # Add system columns first
+    for field in system_fields:
+        if field in config:
+            excel_column = config[field].get('excel_column')
+            if excel_column:
+                ordered_columns.append(excel_column)
+    
+    # Add pattern-matching fields
+    for field, props in config.items():
+        if field not in system_fields and props.get('pattern') and props.get('excel_column'):
+            ordered_columns.append(props['excel_column'])
+    
+    return ordered_columns
 
 def generate_timestamped_filename(base_path=EXCEL_PATH):
     """
@@ -52,11 +79,25 @@ def export_to_excel(data, excel_path=None):
     
     print(f"Creating Excel file: {excel_path}")
 
-    # Determine all columns from all dicts in data
-    columns = set()
+    # Get preferred column order from configuration
+    preferred_columns = get_column_order()
+    
+    # Determine all columns present in the data
+    all_columns = set()
     for row in data:
-        columns.update(row.keys())
-    columns = list(columns)
+        all_columns.update(row.keys())
+    
+    # Create final column list: preferred columns first, then any extra columns
+    columns = []
+    # Add preferred columns that exist in data
+    for col in preferred_columns:
+        if col in all_columns:
+            columns.append(col)
+    
+    # Add any remaining columns that weren't in the preferred list
+    for col in sorted(all_columns):  # Sort for consistent ordering
+        if col not in columns:
+            columns.append(col)
 
     # Always create a new workbook with timestamped filename
     wb = Workbook()
@@ -68,5 +109,5 @@ def export_to_excel(data, excel_path=None):
         ws.append([row.get(col, "") for col in columns])
 
     wb.save(excel_path)
-    print(f"Excel file created successfully with {len(data)} rows")
+    print(f"Excel file created successfully with {len(data)} rows and columns: {', '.join(columns)}")
     return excel_path

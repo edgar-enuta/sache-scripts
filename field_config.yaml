@@ -1,3 +1,13 @@
+
+# System-generated columns (no pattern needed)
+order_number:
+  excel_column: 'OrderNo'
+  description: 'Sequential order number starting from 1'
+email_date:
+  excel_column: 'EmailDate'
+  description: 'Date and time when the email was received'
+
+# Email pattern matching fields
 email_title:
   pattern: 'Fw|W: Comanda Auto Total 1037-(\d{14})'
   excel_column: 'NrComClient'
