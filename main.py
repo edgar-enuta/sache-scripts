@@ -1,3 +1,4 @@
+import argparse
 import imap
 from extract_fields import extract_fields_from_emails
 import excel
@@ -98,34 +99,83 @@ def process_emails():
         return False, None, len(emails)
 
 
-if __name__ == "__main__":
-    print("=== Email to Excel Processing Started ===")
-    
-    # Initialize IMAP connection
+def run_email():
+    """Run the email module. Returns True on success."""
+    print("=== Email Processing Started ===")
     imap.init()
     if not imap.authenticate():
         print("Login failed. Halting program.")
-        exit(1)
-    
+        return False
+
     try:
         success, created_file, processed_count = process_emails()
-        
+
         if success:
             if created_file:
-                print(f"\n✅ SUCCESS: Processed {processed_count} emails and created Excel file:")
-                print(f"   📄 {created_file}")
+                print(f"\nProcessed {processed_count} emails and created Excel file:")
+                print(f"   {created_file}")
             else:
-                print(f"\n✅ SUCCESS: Processed {processed_count} emails (no data to export)")
+                print(f"\nProcessed {processed_count} emails (no data to export)")
         else:
-            print(f"\n❌ FAILED: Processing failed for {processed_count} emails")
-            exit(1)
-            
+            print(f"\nFailed: Processing failed for {processed_count} emails")
+        return success
+
     except Exception as e:
-        print(f"\n❌ CRITICAL ERROR: {e}")
-        exit(1)
+        print(f"\nCritical error in email module: {e}")
+        return False
     finally:
         try:
             imap.logout()
-            print("\n=== Email to Excel Processing Completed ===")
         except Exception as e:
             print(f"Warning: Error during logout: {e}")
+        print("=== Email Processing Completed ===")
+
+
+def run_scrape():
+    """Run the scrape module. Returns True on success."""
+    from scrape import process_scrape
+
+    print("=== Scrape Processing Started ===")
+    try:
+        success, created_file, count = process_scrape()
+
+        if success:
+            if created_file:
+                print(f"\nScraped {count} items and created Excel file:")
+                print(f"   {created_file}")
+            else:
+                print(f"\nScrape completed ({count} items, no data to export)")
+        else:
+            print(f"\nFailed: Scrape processing failed")
+        return success
+
+    except Exception as e:
+        print(f"\nCritical error in scrape module: {e}")
+        return False
+    finally:
+        print("=== Scrape Processing Completed ===")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Email-to-Excel and web scraping automation tool.")
+    parser.add_argument(
+        "command",
+        nargs="?",
+        default="all",
+        choices=["all", "email", "scrape"],
+        help="Which module to run (default: all)",
+    )
+    args = parser.parse_args()
+
+    any_failed = False
+
+    if args.command in ("all", "email"):
+        if not run_email():
+            any_failed = True
+
+    if args.command in ("all", "scrape"):
+        if not run_scrape():
+            any_failed = True
+
+    if any_failed:
+        exit(1)
