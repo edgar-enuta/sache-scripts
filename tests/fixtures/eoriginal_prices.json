@@ -1,0 +1,141 @@
+{
+    "info": [],
+    "error": [],
+    "snack": [],
+    "result": {
+        "a_d611435f": {
+            "pret": {
+                "sets": [],
+                "suppliers": [],
+                "priceBase": {
+                    "px": 34.2,
+                    "p_id": 1,
+                    "pa": 34.2,
+                    "pa_x": 34.2,
+                    "pa_desc": "Pret achizitie, fara TVA",
+                    "pb": 50.3,
+                    "discount": 32,
+                    "pv_v": 41.38,
+                    "pv_v_x": 41.38,
+                    "pv_desc": "Pret vanzare, TVA inclus",
+                    "currency": "RON",
+                    "extradiscount": 0,
+                    "warehouse": -1,
+                    "qty_al": 1,
+                    "qty": 0,
+                    "sup_id": -13,
+                    "supName": "VOLVO",
+                    "supName2": "VOLVO",
+                    "caption": "",
+                    "link": "",
+                    "text": "",
+                    "promo_id": 0,
+                    "promo_source": "NON_ATX"
+                }
+            },
+            "stoc": {},
+            "articleType": "OE",
+            "txt": "O-RING RETUR INJECTOR"
+        },
+        "a_b5104242": {
+            "pret": {
+                "sets": [],
+                "suppliers": [],
+                "priceBase": {
+                    "px": 30.33,
+                    "p_id": 1,
+                    "pa": 30.33,
+                    "pa_x": 30.33,
+                    "pa_desc": "Pret achizitie, fara TVA",
+                    "pb": 44.6,
+                    "discount": 32,
+                    "pv_v": 36.7,
+                    "pv_v_x": 36.7,
+                    "pv_desc": "Pret vanzare, TVA inclus",
+                    "currency": "RON",
+                    "extradiscount": 0,
+                    "warehouse": -1,
+                    "qty_al": 1,
+                    "qty": 0,
+                    "sup_id": -57,
+                    "supName": "VOLVO - R",
+                    "supName2": "VOLVO - R",
+                    "caption": "",
+                    "link": "",
+                    "text": "",
+                    "promo_id": 0,
+                    "promo_source": "NON_ATX"
+                }
+            },
+            "stoc": {},
+            "articleType": "OE"
+        },
+        "a_a3ef19e3": {
+            "pret": {
+                "sets": [],
+                "suppliers": [],
+                "priceBase": {
+                    "px": 38.23,
+                    "p_id": 1,
+                    "pa": 38.23,
+                    "pa_x": 38.23,
+                    "pa_desc": "Pret achizitie, fara TVA",
+                    "pb": 56.21,
+                    "discount": 32,
+                    "pv_v": 46.26,
+                    "pv_v_x": 46.26,
+                    "pv_desc": "Pret vanzare, TVA inclus",
+                    "currency": "RON",
+                    "extradiscount": 0,
+                    "warehouse": -1,
+                    "qty_al": 1,
+                    "qty": 0,
+                    "sup_id": -513,
+                    "supName": "VOLVO - Stoc AD",
+                    "supName2": "VOLVO - Stoc AD",
+                    "caption": "",
+                    "link": "",
+                    "text": "",
+                    "promo_id": 0,
+                    "promo_source": "NON_ATX"
+                }
+            },
+            "stoc": {},
+            "articleType": "OE"
+        },
+        "a_fba15155": {
+            "pret": {
+                "sets": [],
+                "suppliers": [],
+                "priceBase": {
+                    "px": 0.94,
+                    "p_id": 1,
+                    "pa": 0.94,
+                    "pa_x": 0.94,
+                    "pa_desc": "Pret achizitie, fara TVA",
+                    "pb": 1.57,
+                    "discount": 40,
+                    "pv_v": 1.48,
+                    "pv_v_x": 1.48,
+                    "pv_desc": "Pret vanzare, TVA inclus",
+                    "currency": "Lei",
+                    "extradiscount": 0,
+                    "warehouse": -1,
+                    "qty_al": 1,
+                    "qty": 0,
+                    "sup_id": 147,
+                    "supName": "",
+                    "supName2": "",
+                    "caption": "",
+                    "link": "",
+                    "text": "",
+                    "promo_id": 0,
+                    "promo_source": "ATX-1"
+                }
+            },
+            "stoc": {},
+            "articleType": "AM"
+        }
+    },
+    "chat_mess": true
+}
