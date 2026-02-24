@@ -1,3 +1,6 @@
+input:
+  id_column: "CodArticol"
+
 eoriginal:
   columns:
     search_term: "CodArticol"
